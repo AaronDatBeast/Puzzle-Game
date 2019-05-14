@@ -1,3 +1,3 @@
 # Puzzle-Game
-It's a puzzle. The f*ck you want me to say.
 ![](./git.png)
+It's a puzzle.
