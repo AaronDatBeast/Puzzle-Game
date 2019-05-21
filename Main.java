@@ -4,13 +4,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
 import java.util.Random;
-import java.util.stream.IntStream;
-
 import javax.imageio.ImageIO;
 import javax.swing.JPanel;
 
@@ -22,9 +16,13 @@ public class Main extends JPanel {
 	private int[][] pixelArray;
 	private BufferedImage img;
 	private int num;
+	private int invariantRow;
+	private int invariantCol;
 
 	public Main(File file, int num, int inWidth, int inHeight) {
 		this.num = num;
+		invariantRow = num - 1;
+		invariantCol = num - 1;
 		try 
 		{
 			img = createResizedCopy(ImageIO.read(file), inWidth, inHeight);
@@ -62,8 +60,8 @@ public class Main extends JPanel {
 			}
 		}
 		images[num - 1][num - 1].setNull(true);
- 		randomizeArray();
-		
+		randomizeArray();
+
 	}
 
 	private void bufferedImageTo2DArray() {//restricted
@@ -75,37 +73,81 @@ public class Main extends JPanel {
 		}
 	}
 
-	//copied from my semester 1 final lol (modified to work for this project of course)
-		public void randomizeArray() {
+	public void randomizeArray() {
+		//need to check for solvability
+		//currently solvability is about 50%
+		Random random = new Random();
+		
+
+				boolean isValid = false;
 			
-			    Random random = new Random();
-			    for (int i = images.length - 1; i > 0; i--) {
-			        for (int j = images[i].length - 1; j > 0; j--) {
-			            int m = random.nextInt(i + 1);
-			            int n = random.nextInt(j + 1);
+				int number = random.nextInt(4);
+				while(!isValid) {
 
-			            ImageProcessing temp = images[i][j];
-			            
-			            images[i][j] = images[m][n];
-			            images[m][n] = temp;
-			            
-			        }
-			    }
-			    for(int i = 0; i < images.length; i++) {
-			    	for(int j = 0; j < images.length; j++) {
-			    		if(images[j][i].equals(masterArray[j][i])) {
-			    			randomizeArray();
-			    		}
-			    	}
-			    }
-			    
+			
+				switch(number) {
+				case 0: 
+					if((invariantRow-1) >= 0) {
+						isValid = true;
+						ImageProcessing temp = images[invariantRow][invariantCol];
+
+						images[invariantRow][invariantCol] = images[invariantRow - 1][invariantCol];
+						images[invariantRow-1][invariantCol] = temp;
+						invariantRow--;
+					}
+					break;
+				case 1:
+					if((invariantRow+1) < images.length) {
+						isValid = true;
+						ImageProcessing temp = images[invariantRow][invariantCol];
+
+						images[invariantRow][invariantCol] = images[invariantRow + 1][invariantCol];
+						images[invariantRow+1][invariantCol] = temp;
+						invariantRow++;
+					}
+					break;
+				case 2:
+					if((invariantCol+1) < images.length) {
+						isValid = true;
+						ImageProcessing temp = images[invariantRow][invariantCol];
+
+						images[invariantRow][invariantCol] = images[invariantRow][invariantCol + 1];
+						images[invariantRow][invariantCol + 1] = temp;
+						invariantCol++;
+					}
+					break;
+				case 3:
+					if((invariantCol - 1) >= 0) {
+						isValid = true;
+						ImageProcessing temp = images[invariantRow][invariantCol];
+
+						images[invariantRow][invariantCol] = images[invariantRow][invariantCol - 1];
+						images[invariantRow][invariantCol - 1] = temp;
+						invariantCol--;
+					}
+					break;
+				default:
+					break;
+				}
+				number = random.nextInt(4);
+
+				}
+		
+		for(int k = 0; k < images.length; k++) {
+			for(int l = 0; l < images.length; l++) {
+				if(images[l][k].equals(masterArray[l][k])) {
+					randomizeArray();
+				}
+			}
 		}
+		
+	}
 
-	
+
 	public ImageProcessing[][] getBufferedArray() {
 		return images;
 	}
-	
+
 	public ImageProcessing[][] getMaser() {
 		return masterArray;
 	}

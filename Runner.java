@@ -15,7 +15,7 @@ public class Runner {
 		double heightDimension = frame.getPreferredSize().getHeight() + (frame.getPreferredSize().getHeight() / 4);
 		frame.setPreferredSize(new Dimension((int)widthDimension, (int)heightDimension));
 		frame.pack();
-		
+
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.setVisible(true);
 	}

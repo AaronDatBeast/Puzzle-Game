@@ -11,46 +11,27 @@ import javax.imageio.ImageIO;
 public class ImageProcessing {
 	private BufferedImage subImage;
 	private int num;
-	private int x;
-	private int y;
 	private int pos;
 	private boolean isNull;
 	public ImageProcessing(int[][] px, BufferedImage mainImage, int imageRow, int imageCol, int num) {
 		this.num = num;
 		initImage(imageRow, imageCol, px, mainImage);
-		
 	}
 
-
-
-	public File pixelArrayToBufferedImage(int[][] pixelArray, int width, int height, int startX, int startY, int num) {//restructed
-		try {
-			BufferedImage bufferImage2=new BufferedImage(width / num, height / num,BufferedImage.TYPE_INT_RGB);
-			for(int y=0;y< height/num; y++){
-				for(int x=0;x<width/num; x++){
-					bufferImage2.setRGB(x, y, pixelArray[x+startX][y+startY]);
-				}
+	private BufferedImage pixelArrayToBufferedImage(int[][] pixelArray, int width, int height, int startX, int startY, int num) {//restructed
+		BufferedImage bufferImage2=new BufferedImage(width / num, height / num,BufferedImage.TYPE_INT_RGB);
+		for(int y=0;y< height/num; y++){
+			for(int x=0;x<width/num; x++){
+				bufferImage2.setRGB(x, y, pixelArray[x+startX][y+startY]);
 			}
-			File outputfile = new File("new.jpg");
-			ImageIO.write(bufferImage2, "jpg", outputfile);  
-			return outputfile;
-		} catch(IOException ee) {
-			ee.printStackTrace();
-		}
-		return null;
+		}  
+		return bufferImage2;
 	}
 
-	public void initImage(int row, int col, int[][] pixelArray, BufferedImage imgMain) {//available
-		try {
-			subImage = ImageIO.read(pixelArrayToBufferedImage(pixelArray, imgMain.getHeight(), imgMain.getWidth(), (row*imgMain.getWidth()) / num, (col*imgMain.getHeight())/ num, num));
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	private void initImage(int row, int col, int[][] pixelArray, BufferedImage imgMain) {
+		subImage = pixelArrayToBufferedImage(pixelArray, imgMain.getHeight(), imgMain.getWidth(), (row*imgMain.getWidth()) / num, (col*imgMain.getHeight())/ num, num);
 	}
 
-	
-	
 	public BufferedImage getSubImage() {
 		return subImage;
 	}
@@ -59,38 +40,18 @@ public class ImageProcessing {
 		this.subImage = subImage;
 	}
 
-	public int getX() {
-		return x;
-	}
-
-	public void setX(int x) {
-		this.x = x;
-	}
-
 	public int getPos() {
 		return pos;
 	}
-
-
 
 	public void setPos(int pos) {
 		this.pos = pos;
 	}
 
-
-
-	public int getY() {
-		return y;
-	}
-
-	public void setY(int y) {
-		this.y = y;
-	}
-	
 	public boolean getNull() {
 		return isNull;
 	}
-	
+
 	public void setNull(boolean b) {
 		isNull = b;
 	}
